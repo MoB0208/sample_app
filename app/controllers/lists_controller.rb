@@ -6,11 +6,13 @@ class ListsController < ApplicationController
 
   def create
     # １.&2. データを受け取り新規登録するためのインスタンス作成
-    list = List.new(list_params)
-    # 3. データをデータベースに保存するためのsaveメソッド実行
-    list.save
-     # 4. トップ画面へリダイレクト
-     redirect_to list_path(list.id)
+    @list = List.new(list_params)
+    if @list.save
+      redirect_to list_path(@list.id)
+    else
+      render :new
+    end
+
   end
 
 
@@ -49,4 +51,7 @@ end
 
 class List < ApplicationRecord
   has_one_attached :image
+  validates :title, presence: true
+  validates :body, presence: true
+  validates :image, presence: true
 end
